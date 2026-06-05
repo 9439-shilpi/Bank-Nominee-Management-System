@@ -108,6 +108,17 @@ def api_nominees():
 
     return {"nominees": data}
 
+# ---------------- Total nominees ----------------
+
+@app.route("/dashboard")
+def dashboard():
+    with open(FILE, "r") as f:
+        data = json.load(f)
+
+    total = len(data)
+
+    return render_template("dashboard.html", total=total)
+
 # ---------------- RUN ----------------
 if __name__ == "__main__":
-    app.run(debug=True, port=5006)
+    app.run(debug=True, port=5007)

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef3ff;
+            text-align: center;
+        }
+
+        .card {
+            width: 300px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #aaa;
+        }
+
+        h2 {
+            color: #2d6cdf;
+        }
+
+        .number {
+            font-size: 40px;
+            font-weight: bold;
+            color: green;
+        }
+
+        a {
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            background: #2d6cdf;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🏦 Bank Dashboard</h2>
+
+    <p>Total Nominees</p>
+
+    <div class="number">
+        {{ total }}
+    </div>
+
+    <a href="/">Back to Home</a>
+</div>
+
+</body>
+</html>
