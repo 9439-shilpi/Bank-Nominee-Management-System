@@ -26,7 +26,7 @@ if not os.path.exists(FILE):
 def home():
     return render_template("index.html")
 
-# ---------------- ADD by Jatin Bhangotra ----------------
+# ---------------- ADD ----------------
 @app.route("/add", methods=["POST"])
 def add():
 
@@ -50,14 +50,24 @@ def add():
             if existing_primary:
                 return f"❌ {existing_primary[0]} is already Primary nominee. Only one Primary is allowed."
 
-        # STEP 2: Account number must be unique
+        # Feature added by Jatin Bhangotra:
+        # STEP 2: Maximum 2 Secondary nominees allowed
+        if nominee_type == "Secondary":
+            cursor.execute("SELECT COUNT(*) FROM nominees WHERE nominee_type='Secondary'")
+            secondary_count = cursor.fetchone()[0]
+            
+            if secondary_count >= 2:
+                return "❌ Only 2 Secondary nominees are allowed."
+
+        # Feature added by Jatin Bhangotra:    
+        # STEP 3: Account number must be unique
         cursor.execute("SELECT account FROM nominees WHERE account=%s", (account,))
         existing_account = cursor.fetchone()
 
         if existing_account:
             return "❌ Account number already exists."
 
-        # STEP 3: Insert nominee
+        # STEP 4: Insert nominee
         cursor.execute("""
             INSERT INTO nominees (name, gender, relation, account, share_percentage, nominee_type)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -80,7 +90,8 @@ def view():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # If user searched something
+    # Feature added by Jatin Bhangotra:
+    # Search nominees by name or account number
     if search:
         cursor.execute("""
             SELECT * FROM nominees
