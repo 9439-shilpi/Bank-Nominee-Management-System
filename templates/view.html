@@ -94,8 +94,8 @@
         <td>{{ n.nominee_type }}</td>
 
         <td>
-            <a class="edit" href="/edit/{{ loop.index0 }}">Edit</a>
-            <a class="delete" href="/delete/{{ loop.index0 }}">Delete</a>
+            <a class="edit" href="/edit/{{ n.id }}">Edit</a>
+            <a class="delete" href="/delete/{{ n.id }}">Delete</a>
         </td>
     </tr>
     {% endfor %}

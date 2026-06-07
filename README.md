@@ -72,6 +72,39 @@ python3 app.py
 http://127.0.0.1:5004
 ```
 
+### SQL Procedure
+CREATE DATABASE IF NOT EXISTS bank_nominee_db;
+USE bank_nominee_db;
+
+DROP TABLE IF EXISTS nominees;
+
+CREATE TABLE nominees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    gender VARCHAR(20),
+    relation VARCHAR(50),
+    account BIGINT,
+    share_percentage VARCHAR(10),
+    nominee_type VARCHAR(20)
+);
+
+DELIMITER $$
+
+CREATE TRIGGER block_multiple_primary
+BEFORE INSERT ON nominees
+FOR EACH ROW
+BEGIN
+    IF NEW.nominee_type = 'Primary' THEN
+        IF (SELECT COUNT(*) FROM nominees WHERE nominee_type = 'Primary') >= 1 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Only one Primary nominee allowed';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
 ## Author
 
 Sunandana Sahoo

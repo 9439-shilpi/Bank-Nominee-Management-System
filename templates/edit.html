@@ -45,42 +45,43 @@
 
     <h2>Edit Nominee</h2>
 
-    <form action="/update/{{ index }}" method="POST">
+   <form action="/update/{{ nominee.id }}" method="POST">
 
-        <input type="text" name="name" value="{{ nominee.name }}" required>
+    <input type="text" name="name" value="{{ nominee.name }}" required>
 
-        <label>Gender</label><br>
-        <input type="radio" name="gender" value="Male"
-        {% if nominee.gender == "Male" %}checked{% endif %}> Male
+    <label>Gender</label><br>
+    <input type="radio" name="gender" value="Male"
+    {% if nominee.gender == "Male" %}checked{% endif %}> Male
 
-        <input type="radio" name="gender" value="Female"
-        {% if nominee.gender == "Female" %}checked{% endif %}> Female
+    <input type="radio" name="gender" value="Female"
+    {% if nominee.gender == "Female" %}checked{% endif %}> Female
 
-        <br><br>
+    <br><br>
 
-        <input type="text" name="relation" value="{{ nominee.relation }}" required>
+    <input type="text" name="relation" value="{{ nominee.relation }}" required>
 
-        <input type="text" name="account" value="{{ nominee.account }}" required>
+    <input type="text" name="account" value="{{ nominee.account }}" required>
 
-        <label>Share %</label>
-        <select name="share_percentage">
-            <option value="25%" {% if nominee.share_percentage=="25%" %}selected{% endif %}>25%</option>
-            <option value="50%" {% if nominee.share_percentage=="50%" %}selected{% endif %}>50%</option>
-            <option value="75%" {% if nominee.share_percentage=="75%" %}selected{% endif %}>75%</option>
-            <option value="100%" {% if nominee.share_percentage=="100%" %}selected{% endif %}>100%</option>
-        </select>
+    <label>Share %</label>
+    <select name="share_percentage">
+        <option value="25%" {% if nominee.share_percentage=="25%" %}selected{% endif %}>25%</option>
+        <option value="50%" {% if nominee.share_percentage=="50%" %}selected{% endif %}>50%</option>
+        <option value="75%" {% if nominee.share_percentage=="75%" %}selected{% endif %}>75%</option>
+        <option value="100%" {% if nominee.share_percentage=="100%" %}selected{% endif %}>100%</option>
+    </select>
 
-        <label>Nominee Type</label>
-        <select name="nominee_type">
-            <option value="Primary" {% if nominee.nominee_type=="Primary" %}selected{% endif %}>Primary</option>
-            <option value="Secondary" {% if nominee.nominee_type=="Secondary" %}selected{% endif %}>Secondary</option>
-        </select>
+    <label>Nominee Type</label>
+    <select name="nominee_type">
+        <option value="Primary" {% if nominee.nominee_type=="Primary" %}selected{% endif %}>Primary</option>
+        <option value="Secondary" {% if nominee.nominee_type=="Secondary" %}selected{% endif %}>Secondary</option>
+    </select>
 
-        <br><br>
+    <br><br>
 
-        <button type="submit">Update Nominee</button>
+    <button type="submit">Update Nominee</button>
 
-    </form>
+</form>
+     
 
 </div>
 
