@@ -26,7 +26,7 @@ if not os.path.exists(FILE):
 def home():
     return render_template("index.html")
 
-# ---------------- ADD ----------------
+# ---------------- ADD Jatin/Sunandana ----------------
 @app.route("/add", methods=["POST"])
 def add():
 
@@ -41,7 +41,7 @@ def add():
     cursor = conn.cursor()
 
     try:
-
+         # Feature added by Sunandana Sahoo:
         # STEP 1: Only one Primary allowed
         if nominee_type == "Primary":
             cursor.execute("SELECT name FROM nominees WHERE nominee_type='Primary'")
@@ -81,7 +81,7 @@ def add():
         cursor.close()
         conn.close()
 
-# ---------------- VIEW ----------------
+# ---------------- VIEW by Jatin Bhangotra----------------
 @app.route("/view")
 def view():
 
@@ -107,7 +107,7 @@ def view():
 
     return render_template("view.html", nominees=nominees)
 
-# ---------------- UPDATE ----------------
+# ---------------- UPDATE  by Sunandana Sahoo----------------
 @app.route("/update/<int:id>", methods=["POST"])
 def update(id):
 
@@ -146,7 +146,7 @@ def update(id):
 
     return redirect("/view")
 
-# ---------------- DELETE ----------------
+# ---------------- DELETE by Sunandana Sahoo----------------
 @app.route("/delete/<int:id>")
 def delete(id):
 
@@ -161,7 +161,7 @@ def delete(id):
 
     return redirect("/view")
 
-# ---------------- API ----------------
+# ---------------- API by Jatin Bhangotra ----------------
 @app.route("/api/nominees")
 def api_nominees():
 
@@ -184,7 +184,7 @@ def api_nominees():
 
     return {"nominees": data}
 
-# ---------------- DASHBOARD ----------------
+# ---------------- DASHBOARD----------------
 @app.route("/dashboard")
 def dashboard():
     with open(FILE, "r") as f:
