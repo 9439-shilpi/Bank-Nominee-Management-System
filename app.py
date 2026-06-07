@@ -66,7 +66,7 @@ def add():
     gender = request.form["gender"]
     relation = request.form["relation"]
     account = request.form["account"]
-    share_percentage = request.form["share_percentage"]
+    share_percentage = int(request.form["share_percentage"])
     nominee_type = request.form["nominee_type"]
 
     conn = get_connection()
