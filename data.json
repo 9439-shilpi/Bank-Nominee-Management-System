@@ -1,10 +1,18 @@
 [
     {
-        "name": "Amit",
-        "gender": "Male",
+        "name": "Jatin ",
+        "gender": "Female",
         "relation": "brother",
-        "account": "5678",
-        "share_percentage": "50%",
-        "nominee_type": "Primary"
+        "account": 12345,
+        "share_percentage": "100%",
+        "nominee_type": "Secondary"
+    },
+    {
+        "name": "fight",
+        "gender": "Female",
+        "relation": "ghjjk",
+        "account": 0,
+        "share_percentage": "75%",
+        "nominee_type": "Secondary"
     }
 ]
