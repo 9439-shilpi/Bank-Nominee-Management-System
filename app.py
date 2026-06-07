@@ -73,8 +73,7 @@ def add():
     cursor = conn.cursor()
 
     try:
-         # Feature added by Sunandana Sahoo:
-        # STEP 1: Only one Primary allowed
+        # Only one Primary allowed
         if nominee_type == "Primary":
             cursor.execute("SELECT name FROM nominees WHERE nominee_type='Primary'")
             existing_primary = cursor.fetchone()
@@ -82,32 +81,43 @@ def add():
             if existing_primary:
                 return f"❌ {existing_primary[0]} is already Primary nominee. Only one Primary is allowed."
 
-        # Feature added by Jatin Bhangotra:
-        # STEP 2: Maximum 2 Secondary nominees allowed
+        # Maximum 2 Secondary nominees allowed
         if nominee_type == "Secondary":
             cursor.execute("SELECT COUNT(*) FROM nominees WHERE nominee_type='Secondary'")
             secondary_count = cursor.fetchone()[0]
-            
+
             if secondary_count >= 2:
                 return "❌ Only 2 Secondary nominees are allowed."
 
-        # Feature added by Jatin Bhangotra:    
-        # STEP 3: Account number must be unique
-        cursor.execute("SELECT account FROM nominees WHERE account=%s", (account,))
+        # Account number must be unique
+        cursor.execute(
+            "SELECT account FROM nominees WHERE account=%s",
+            (account,)
+        )
         existing_account = cursor.fetchone()
 
         if existing_account:
             return "❌ Account number already exists."
 
-        # STEP 4: Insert nominee
+        # Insert nominee
         cursor.execute("""
-            INSERT INTO nominees (name, gender, relation, account, share_percentage, nominee_type)
+            INSERT INTO nominees
+            (name, gender, relation, account, share_percentage, nominee_type)
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (name, gender, relation, account, share_percentage, nominee_type))
+        """, (
+            name,
+            gender,
+            relation,
+            account,
+            share_percentage,
+            nominee_type
+        ))
 
         conn.commit()
-
         return redirect("/view")
+
+    except Exception as e:
+        return f"ADD ERROR: {str(e)}"
 
     finally:
         cursor.close()
