@@ -52,58 +52,46 @@ def home():
 @app.route("/add", methods=["POST"])
 def add():
 
-    name = request.form["name"]
-    gender = request.form["gender"]
-    relation = request.form["relation"]
-    account = request.form["account"]
-    share_percentage = int(request.form["share_percentage"])
-    nominee_type = request.form["nominee_type"]
-
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-        # Only one Primary allowed
+        name = request.form["name"]
+        gender = request.form["gender"]
+        relation = request.form["relation"]
+        account = request.form["account"]
+        share_percentage = request.form["share_percentage"]
+        nominee_type = request.form["nominee_type"]
+
+        # ✅ validation
+        if not account.isdigit():
+            return "❌ Account must contain only numbers"
+
+        # Primary check
         if nominee_type == "Primary":
-            cursor.execute("SELECT name FROM nominees WHERE nominee_type='Primary'")
-            existing_primary = cursor.fetchone()
+            cursor.execute("SELECT id FROM nominees WHERE nominee_type='Primary'")
+            if cursor.fetchone():
+                return "❌ Primary already exists"
 
-            if existing_primary:
-                return f"❌ {existing_primary[0]} is already Primary nominee. Only one Primary is allowed."
-
-        # Maximum 2 Secondary nominees allowed
+        # Secondary limit
         if nominee_type == "Secondary":
             cursor.execute("SELECT COUNT(*) FROM nominees WHERE nominee_type='Secondary'")
-            secondary_count = cursor.fetchone()[0]
+            if cursor.fetchone()[0] >= 2:
+                return "❌ Only 2 Secondary allowed"
 
-            if secondary_count >= 2:
-                return "❌ Only 2 Secondary nominees are allowed."
+        # Duplicate account
+        cursor.execute("SELECT id FROM nominees WHERE account=%s", (account,))
+        if cursor.fetchone():
+            return "❌ Account already exists"
 
-        # Account number must be unique
-        cursor.execute(
-            "SELECT account FROM nominees WHERE account=%s",
-            (account,)
-        )
-        existing_account = cursor.fetchone()
-
-        if existing_account:
-            return "❌ Account number already exists."
-
-        # Insert nominee
+        # insert
         cursor.execute("""
-            INSERT INTO nominees
-            (name, gender, relation, account, share_percentage, nominee_type)
+            INSERT INTO nominees (name, gender, relation, account, share_percentage, nominee_type)
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (
-            name,
-            gender,
-            relation,
-            account,
-            share_percentage,
-            nominee_type
-        ))
+        """, (name, gender, relation, account, share_percentage, nominee_type))
 
         conn.commit()
+
         return redirect("/view")
 
     except Exception as e:
