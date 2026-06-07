@@ -74,31 +74,27 @@ def add():
 # ---------------- VIEW ----------------
 @app.route("/view")
 def view():
+
+    search = request.args.get("search")
+
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM nominees")
+    # If user searched something
+    if search:
+        cursor.execute("""
+            SELECT * FROM nominees
+            WHERE name LIKE %s OR account LIKE %s
+        """, (f"%{search}%", f"%{search}%"))
+    else:
+        cursor.execute("SELECT * FROM nominees")
+
     nominees = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
     return render_template("view.html", nominees=nominees)
-
-# ---------------- VIEW ----------------
-@app.route("/edit/<int:id>")
-def edit(id):
-
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM nominees WHERE id=%s", (id,))
-    nominee = cursor.fetchone()
-
-    cursor.close()
-    conn.close()
-
-    return render_template("edit.html", nominee=nominee)
 
 # ---------------- UPDATE ----------------
 @app.route("/update/<int:id>", methods=["POST"])
