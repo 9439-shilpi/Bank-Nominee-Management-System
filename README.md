@@ -104,8 +104,21 @@ END$$
 
 DELIMITER ;
 
+## Editing table nominee for unique account no.
+
+DROP TABLE IF EXISTS nominees;
+
+CREATE TABLE nominees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    gender VARCHAR(20),
+    relation VARCHAR(50),
+    account BIGINT UNIQUE,
+    share_percentage VARCHAR(10),
+    nominee_type VARCHAR(20)
+);
 
 ## Author
 
-Sunandana Sahoo
-Jatin Bhangotra
+Sunandana Sahoo and 
+Jatin Bhangotra.

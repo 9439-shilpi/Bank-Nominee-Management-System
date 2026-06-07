@@ -26,7 +26,7 @@ if not os.path.exists(FILE):
 def home():
     return render_template("index.html")
 
-# ---------------- ADD ----------------
+# ---------------- ADD by Jatin Bhangotra ----------------
 @app.route("/add", methods=["POST"])
 def add():
 
@@ -40,26 +40,36 @@ def add():
     conn = get_connection()
     cursor = conn.cursor()
 
-    # STEP 1: Only one Primary allowed
-    if nominee_type == "Primary":
-        cursor.execute("SELECT name FROM nominees WHERE nominee_type='Primary'")
-        existing = cursor.fetchone()
+    try:
 
-        if existing:
-            return f"❌ {existing[0]} is already Primary nominee. Only one Primary is allowed."
+        # STEP 1: Only one Primary allowed
+        if nominee_type == "Primary":
+            cursor.execute("SELECT name FROM nominees WHERE nominee_type='Primary'")
+            existing_primary = cursor.fetchone()
 
-    # STEP 2: Insert nominee
-    cursor.execute("""
-        INSERT INTO nominees (name, gender, relation, account, share_percentage, nominee_type)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (name, gender, relation, account, share_percentage, nominee_type))
+            if existing_primary:
+                return f"❌ {existing_primary[0]} is already Primary nominee. Only one Primary is allowed."
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        # STEP 2: Account number must be unique
+        cursor.execute("SELECT account FROM nominees WHERE account=%s", (account,))
+        existing_account = cursor.fetchone()
 
-    return redirect("/view")
-    
+        if existing_account:
+            return "❌ Account number already exists."
+
+        # STEP 3: Insert nominee
+        cursor.execute("""
+            INSERT INTO nominees (name, gender, relation, account, share_percentage, nominee_type)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (name, gender, relation, account, share_percentage, nominee_type))
+
+        conn.commit()
+
+        return redirect("/view")
+
+    finally:
+        cursor.close()
+        conn.close()
 
 # ---------------- VIEW ----------------
 @app.route("/view")
