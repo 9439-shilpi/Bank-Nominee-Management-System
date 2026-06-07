@@ -21,32 +21,22 @@ def get_connection():
 def create_table():
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS nominees (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100),
-
         gender VARCHAR(20),
-
         relation VARCHAR(100),
-
-        account VARCHAR(100),
-
-        share_percentage INT,
-
+        account VARCHAR(100) UNIQUE,
+        share_percentage VARCHAR(10),
         nominee_type VARCHAR(50)
-
     )
-
     """)
 
     conn.commit()
-
     cursor.close()
-
     conn.close()
-
-create_table()
 
 # ---------------- CREATE JSON FILE ----------------
 if not os.path.exists(FILE):
