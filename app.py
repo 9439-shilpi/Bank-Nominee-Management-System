@@ -10,11 +10,10 @@ FILE = "data.json"
 # ---------------- MYSQL CONNECTION ----------------
 def get_connection():
     return mysql.connector.connect(
-        host=os.getenv("MYSQLHOST"),
-        user=os.getenv("MYSQLUSER"),
-        password=os.getenv("MYSQLPASSWORD"),
-        database=os.getenv("MYSQLDATABASE"),
-        port=int(os.getenv("MYSQLPORT"))
+        host="127.0.0.1",
+        user="root",
+        password="NewPassword@123",
+        database="bank_nominee_db",
     )
 
 # ---------------- CREATE JSON FILE ----------------
