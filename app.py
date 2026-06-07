@@ -130,43 +130,53 @@ def view():
         return f"ERROR OCCURED: {str(e)}"
 
 # ---------------- UPDATE  by Sunandana Sahoo----------------
+
 @app.route("/update/<int:id>", methods=["POST"])
 def update(id):
 
-    name = request.form["name"]
-    gender = request.form["gender"]
-    relation = request.form["relation"]
-    account = request.form["account"]
-    share_percentage = request.form["share_percentage"]
-    nominee_type = request.form["nominee_type"]
+    try:
+        name = request.form["name"]
+        gender = request.form["gender"]
+        relation = request.form["relation"]
+        account = request.form["account"]
+        nominee_type = request.form["nominee_type"]
 
-    conn = get_connection()
-    cursor = conn.cursor()
+        # ✅ FIX: remove %
+        share_percentage = request.form["share_percentage"].replace("%", "")
+        share_percentage = float(share_percentage)
 
-    cursor.execute("""
-        UPDATE nominees
-        SET name=%s,
-            gender=%s,
-            relation=%s,
-            account=%s,
-            share_percentage=%s,
-            nominee_type=%s
-        WHERE id=%s
-    """, (
-        name,
-        gender,
-        relation,
-        account,
-        share_percentage,
-        nominee_type,
-        id
-    ))
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        cursor.execute("""
+            UPDATE nominees
+            SET name=%s,
+                gender=%s,
+                relation=%s,
+                account=%s,
+                share_percentage=%s,
+                nominee_type=%s
+            WHERE id=%s
+        """, (
+            name,
+            gender,
+            relation,
+            account,
+            share_percentage,
+            nominee_type,
+            id
+        ))
 
-    return redirect("/view")
+        conn.commit()
+
+        return redirect("/view")
+
+    except Exception as e:
+        return f"UPDATE ERROR: {str(e)}"
+
+    finally:
+        cursor.close()
+        conn.close()
 
 # ---------------- edit  by Sunandana Sahoo----------------
 @app.route("/edit/<int:id>")
