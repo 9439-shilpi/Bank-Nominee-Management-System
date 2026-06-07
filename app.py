@@ -82,31 +82,32 @@ def add():
         cursor.close()
         conn.close()
 
-# ---------------- VIEW by Jatin Bhangotra----------------
+# ---------------- View Jatin/Sunandana ----------------
 @app.route("/view")
 def view():
+    try:
+        search = request.args.get("search")
 
-    search = request.args.get("search")
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
 
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+        if search:
+            cursor.execute("""
+                SELECT * FROM nominees
+                WHERE name LIKE %s OR account LIKE %s
+            """, (f"%{search}%", f"%{search}%"))
+        else:
+            cursor.execute("SELECT * FROM nominees")
 
-    # Feature added by Jatin Bhangotra:
-    # Search nominees by name or account number
-    if search:
-        cursor.execute("""
-            SELECT * FROM nominees
-            WHERE name LIKE %s OR account LIKE %s
-        """, (f"%{search}%", f"%{search}%"))
-    else:
-        cursor.execute("SELECT * FROM nominees")
+        nominees = cursor.fetchall()
 
-    nominees = cursor.fetchall()
+        cursor.close()
+        conn.close()
 
-    cursor.close()
-    conn.close()
+        return render_template("view.html", nominees=nominees)
 
-    return render_template("view.html", nominees=nominees)
+    except Exception as e:
+        return f"ERROR OCCURED: {str(e)}"
 
 # ---------------- UPDATE  by Sunandana Sahoo----------------
 @app.route("/update/<int:id>", methods=["POST"])
