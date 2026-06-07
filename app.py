@@ -16,6 +16,37 @@ def get_connection():
         database=os.getenv("DB_NAME"),
         port=int(os.getenv("DB_PORT", 25861))
     )
+# ---------------- CREATE TABLE ----------------
+
+def create_table():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS nominees (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100),
+
+        gender VARCHAR(20),
+
+        relation VARCHAR(100),
+
+        account VARCHAR(100),
+
+        share_percentage INT,
+
+        nominee_type VARCHAR(50)
+
+    )
+
+    """)
+
+    conn.commit()
+
+    cursor.close()
+
+    conn.close()
+
+create_table()
 
 # ---------------- CREATE JSON FILE ----------------
 if not os.path.exists(FILE):
