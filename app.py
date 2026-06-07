@@ -168,6 +168,20 @@ def update(id):
 
     return redirect("/view")
 
+# ---------------- edit  by Sunandana Sahoo----------------
+@app.route("/edit/<int:id>")
+def edit(id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM nominees WHERE id=%s", (id,))
+    nominee = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("edit.html", nominee=nominee)
+
 # ---------------- DELETE by Sunandana Sahoo----------------
 @app.route("/delete/<int:id>")
 def delete(id):
