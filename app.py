@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 FILE = "data.json"
 
-# ---------------- MYSQL CONNECTION ----------------
+# ---------------- MYSQL CONNECTION by Sunandana Sahoo ----------------
 def get_connection():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST"),
@@ -16,7 +16,7 @@ def get_connection():
         database=os.getenv("DB_NAME"),
         port=int(os.getenv("DB_PORT", 25861))
     )
-# ---------------- CREATE TABLE ----------------
+# ---------------- CREATE TABLE by Sunandana Sahoo ----------------
 
 def create_table():
     conn = get_connection()
@@ -38,7 +38,7 @@ def create_table():
     cursor.close()
     conn.close()
 
-# ---------------- CREATE JSON FILE ----------------
+# ---------------- CREATE JSON FILE by Sunandana Sahoo ----------------
 if not os.path.exists(FILE):
     with open(FILE, "w") as f:
         json.dump([], f)
@@ -233,7 +233,7 @@ def api_nominees():
 
     return {"nominees": data}
 
-# ---------------- DASHBOARD----------------
+# ---------------- DASHBOARD by Sunandana Sahoo----------------
 @app.route("/dashboard")
 def dashboard():
     with open(FILE, "r") as f:
