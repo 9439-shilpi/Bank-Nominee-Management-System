@@ -73,31 +73,64 @@ http://127.0.0.1:5004
 ```
 
 ### SQL Procedure
-CREATE DATABASE IF NOT EXISTS bank_nominee_db;
-USE bank_nominee_db;
+USE defaultdb;
 
-DROP TABLE IF EXISTS nominees;
+CREATE TABLE IF NOT EXISTS nominees (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100),
+        gender VARCHAR(20),
+        relation VARCHAR(100),
+        account VARCHAR(100) UNIQUE,
+        share_percentage VARCHAR(10),
+        nominee_type VARCHAR(50)
+    )
 
-CREATE TABLE nominees (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    gender VARCHAR(20),
-    relation VARCHAR(50),
-    account BIGINT,
-    share_percentage VARCHAR(10),
-    nominee_type VARCHAR(20)
-);
+
+Select * From nominees;
+
+mysql> DESCRIBE nominees;
++------------------+--------------+------+-----+---------+----------------+
+| Field            | Type         | Null | Key | Default | Extra          |
++------------------+--------------+------+-----+---------+----------------+
+| id               | int          | NO   | PRI | NULL    | auto_increment |
+| name             | varchar(100) | YES  |     | NULL    |                |
+| gender           | varchar(20)  | YES  |     | NULL    |                |
+| relation         | varchar(100) | YES  |     | NULL    |                |
+| account          | varchar(100) | YES  |     | NULL    |                |
+| share_percentage | int          | YES  |     | NULL    |                |
+| nominee_type     | varchar(50)  | YES  |     | NULL    |                |
++------------------+------
+
+ALTER TABLE nominees
+ADD CONSTRAINT unique_account UNIQUE (account);
 
 DELIMITER $$
 
-CREATE TRIGGER block_multiple_primary
+CREATE TRIGGER limit_primary
 BEFORE INSERT ON nominees
 FOR EACH ROW
 BEGIN
     IF NEW.nominee_type = 'Primary' THEN
-        IF (SELECT COUNT(*) FROM nominees WHERE nominee_type = 'Primary') >= 1 THEN
+        IF (SELECT COUNT(*) FROM nominees WHERE nominee_type='Primary') >= 1 THEN
             SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Only one Primary nominee allowed';
+            SET MESSAGE_TEXT = 'Only ONE Primary nominee allowed';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER limit_secondary
+BEFORE INSERT ON nominees
+FOR EACH ROW
+BEGIN
+    IF NEW.nominee_type = 'Secondary' THEN
+        IF (SELECT COUNT(*) FROM nominees WHERE nominee_type='Secondary') >= 2 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Only TWO Secondary nominees allowed';
         END IF;
     END IF;
 END$$

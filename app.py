@@ -74,12 +74,14 @@ def add():
             if cursor.fetchone():
                 return "❌ Primary already exists"
 
+        # Feature added by Jatin Bhangotra
         # Secondary limit
         if nominee_type == "Secondary":
             cursor.execute("SELECT COUNT(*) FROM nominees WHERE nominee_type='Secondary'")
             if cursor.fetchone()[0] >= 2:
                 return "❌ Only 2 Secondary allowed"
 
+        # Feature added by Jatin Bhangotra
         # Duplicate account
         cursor.execute("SELECT id FROM nominees WHERE account=%s", (account,))
         if cursor.fetchone():
@@ -111,6 +113,7 @@ def view():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
+        # Search Feature added by Jatin Bhangotra
         if search:
             cursor.execute("""
                 SELECT * FROM nominees
